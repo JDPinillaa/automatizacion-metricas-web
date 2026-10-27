@@ -1,0 +1,21 @@
+{
+  "name": "uam-web-metrics-automation",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Esqueleto para la automatización de métricas web (Cypress + Lighthouse) del Portal de Pagos de la UAM.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "test:cypress": "cypress run",
+    "cypress:open": "cypress open",
+    "scheduler": "node scheduler/runner.js"
+  },
+  "devDependencies": {
+    "chrome-launcher": "^1.2.2",
+    "cypress": "^16.2.0",
+    "lighthouse": "^13.5.0",
+    "node-cron": "^4.6.0"
+  }
+}
