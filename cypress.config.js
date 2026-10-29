@@ -1,11 +1,18 @@
 const { defineConfig } = require('cypress');
+const devices = require('./config/devices');
+const { runLighthouseAudit } = require('./lib/lighthouse');
+const {
+  normalizeLighthouseResult,
+  buildErrorRecord,
+} = require('./lib/normalize');
+const { appendMetric } = require('./lib/metrics-store');
 
 /**
  * Configuración base de Cypress (E2E).
  *
- * Tareas de Node pendientes de implementar:
- * - runLighthouse: ejecuta Lighthouse sobre una URL y un perfil de dispositivo.
- * - saveMetrics: persiste las métricas obtenidas en el fixture/repositorio de resultados.
+ * Tareas de Node:
+ * - runLighthouse: ejecuta Lighthouse local y normaliza el resultado.
+ * - saveMetrics: agrega/actualiza la medición en el historial JSON.
  *
  * @see https://docs.cypress.io/app/references/configuration
  */
@@ -21,30 +28,44 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       on('task', {
         /**
-         * Ejecuta una auditoría Lighthouse.
+         * Ejecuta Lighthouse sobre una página y un perfil de dispositivo.
+         * Si falla, devuelve un registro con status "error" para no perder el intento.
          *
-         * @param {{ url: string, deviceProfile: string }} args
-         * @returns {Promise<null>} // TODO: devolver el reporte/resultado de Lighthouse
+         * @param {{ page: Object, deviceProfile: string, runId: string }} args
+         * @returns {Promise<Object>}
          */
-        runLighthouse({ url, deviceProfile }) {
-          // TODO: Implementar ejecución de Lighthouse (lighthouse + chrome-launcher)
-          // TODO: Aplicar config/devices.js y config/thresholds.js
-          return null;
+        async runLighthouse({ page, deviceProfile, runId }) {
+          const device = devices[deviceProfile];
+
+          if (!device) {
+            return buildErrorRecord({
+              page,
+              device: { id: deviceProfile, label: deviceProfile },
+              runId,
+              error: new Error(`Perfil de dispositivo no configurado: ${deviceProfile}`),
+            });
+          }
+
+          try {
+            const lhr = await runLighthouseAudit({ url: page.url, device });
+            return normalizeLighthouseResult(lhr, { page, device, runId });
+          } catch (error) {
+            return buildErrorRecord({ page, device, runId, error });
+          }
         },
 
         /**
-         * Guarda las métricas de una página en el almacenamiento de resultados.
+         * Persiste una medición en cypress/fixtures/lighthouse-metrics.json.
          *
-         * @param {{ pageId: string, deviceProfile: string, metrics: object }} payload
-         * @returns {null} // TODO: devolver el resultado de la persistencia
+         * @param {Object} record
+         * @returns {null}
          */
-        saveMetrics({ pageId, deviceProfile, metrics }) {
-          // TODO: Implementar persistencia en cypress/fixtures/lighthouse-metrics.json
+        saveMetrics(record) {
+          appendMetric(record);
           return null;
         },
       });
 
-      // TODO: registrar más plugins/tareas si el equipo lo requiere
       return config;
     },
   },
