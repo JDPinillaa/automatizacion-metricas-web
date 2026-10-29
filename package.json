@@ -6,6 +6,8 @@
   "scripts": {
     "test": "cypress run",
     "test:cypress": "cypress run",
+    "test:unit": "node --test tests/*.test.js",
+    "test:metrics": "cypress run --spec cypress/e2e/metrics.cy.js",
     "cypress:open": "cypress open",
     "scheduler": "node scheduler/runner.js"
   },

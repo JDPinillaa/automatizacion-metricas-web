@@ -1,0 +1,31 @@
+{
+  "finalUrl": "https://intrauam.autonoma.edu.co/ponline/",
+  "fetchTime": "2026-10-29T15:15:48.007Z",
+  "lighthouseVersion": "13.5.0",
+  "configSettings": {
+    "formFactor": "mobile",
+    "screenEmulation": {
+      "mobile": true,
+      "width": 412,
+      "height": 823,
+      "deviceScaleFactor": 1.75,
+      "disabled": false
+    }
+  },
+  "audits": {
+    "first-contentful-paint": {
+      "numericValue": 2629.064
+    },
+    "largest-contentful-paint": {
+      "numericValue": 3662.186
+    },
+    "speed-index": {
+      "numericValue": 3140.189
+    }
+  },
+  "categories": {
+    "performance": {
+      "score": 0.85
+    }
+  }
+}
