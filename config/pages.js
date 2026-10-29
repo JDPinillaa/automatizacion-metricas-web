@@ -18,20 +18,18 @@ module.exports = [
     id: 'portal-pagos',
     name: 'Portal de Pagos UAM (Inicio)',
     url: 'https://intrauam.autonoma.edu.co/ponline/',
-    path: '/ponline/',
-    owner: 'Ever',
-    enabled: true,
+    owner: 'Juan Diego Pinilla',
   },
   {
     id: 'pago-publico',
     name: 'Pago Público en Línea',
     url: 'https://intrauam.autonoma.edu.co/ponline/pagosEnLinea/pagoPublico',
-    owner: 'Pendiente',
+    owner: 'Ever Santiago Uribe',
   },
   {
     id: 'adjunto-pago',
     name: 'Adjunto de Pago (tipo M)',
     url: 'https://intrauam.autonoma.edu.co/ponline/pagosEnLinea/adjuntoPago?tipoPago=M',
-    owner: 'Pendiente',
+    owner: 'Camilo Henao',
   },
 ];

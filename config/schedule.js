@@ -25,7 +25,7 @@ module.exports = [
     time: '06:00',
     timezone: 'America/Bogota',
     frequency: 'daily',
-    deviceProfile: 'moto-g',
+    deviceProfile: 'mobile',
     pages: ['portal-pagos', 'pago-publico', 'adjunto-pago'],
   },
   {

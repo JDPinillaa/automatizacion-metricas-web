@@ -8,6 +8,8 @@
  *   - 'higher-is-better': valores mayores son mejores (Performance).
  * - El límite superior global (100 en Performance) se considera inclusivo.
  *
+ * Los nombres de las métricas coinciden con los campos obligatorios del JSON.
+ *
  * @typedef {'good'|'needsImprovement'|'poor'} ThresholdLevel
  * @typedef {{ min: number, max: number|null }} ThresholdRange
  *
@@ -20,14 +22,14 @@
  * }>}
  */
 const thresholds = {
-  fcp: {
+  firstContentfulPaint: {
     unit: 'ms',
     direction: 'lower-is-better',
     good: { min: 0, max: 1800 },
     needsImprovement: { min: 1800, max: 3000 },
     poor: { min: 3000, max: null },
   },
-  lcp: {
+  largestContentfulPaint: {
     unit: 'ms',
     direction: 'lower-is-better',
     good: { min: 0, max: 2500 },
