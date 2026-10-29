@@ -1,10 +1,13 @@
 {
   "name": "automatizacion-metricas-web",
   "version": "1.0.0",
-  "description": "",
+  "description": "Esqueleto para la automatización de métricas web (Cypress + Lighthouse) del Portal de Pagos de la UAM.",
   "main": "cypress.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cypress run",
+    "test:cypress": "cypress run",
+    "cypress:open": "cypress open",
+    "scheduler": "node scheduler/runner.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +22,13 @@
   },
   "homepage": "https://github.com/JDPinillaa/automatizacion-metricas-web#readme",
   "devDependencies": {
-    "cypress": "^16.2.1"
+    "chrome-launcher": "^1.2.2",
+    "cypress": "^16.2.1",
+    "lighthouse": "^13.5.0",
+    "node-cron": "^4.6.0"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=22.19.0"
   }
 }
