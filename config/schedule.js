@@ -6,9 +6,12 @@
  * @property {string} id             Identificador único del job.
  * @property {boolean} enabled       Si el job debe registrarse en node-cron.
  * @property {string} startDate      Fecha de inicio (YYYY-MM-DD).
- * @property {string} time           Hora local de ejecución (HH:mm).
- * @property {string} timezone       Zona horaria IANA.
- * @property {'daily'|'weekly'} frequency
+ * @property {string} time           Hora local de ejecución (HH:mm, 24 h).
+ * @property {string} [timezone]     Zona horaria IANA (por defecto America/Bogota).
+ * @property {'once'|'daily'|'weekly'} frequency
+ *   - once:   una sola vez, en `startDate` a la hora `time`.
+ *   - daily:  todos los días a `time`, desde `startDate` (inclusive).
+ *   - weekly: cada semana el mismo día de la semana que `startDate`, a `time`.
  * @property {string} deviceProfile  Clave de config/devices.js.
  * @property {string[]} pages        Ids de config/pages.js.
  *

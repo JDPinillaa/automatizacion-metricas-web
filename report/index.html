@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Informe de métricas web · Portal de Pagos UAM</title>
+  <meta name="description" content="Informe de rendimiento web (FCP, LCP, Speed Index y Performance) del Portal de Pagos de la Universidad Autónoma de Manizales: comparativa móvil vs. escritorio e historial de mediciones con Lighthouse.">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23312e81'/%3E%3Cpath d='M7 22l6-7 4 4 8-10' stroke='%2334d399' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <div class="brand">
+        <span class="brand__logo" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="36" height="36"><rect width="32" height="32" rx="9" fill="url(#g)"/><path d="M7 22l6-7 4 4 8-10" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#14b8a6"/></linearGradient></defs></svg>
+        </span>
+        <div>
+          <p class="brand__eyebrow">Universidad Autónoma de Manizales</p>
+          <h1 class="brand__title">Informe de métricas web</h1>
+          <p class="brand__subtitle">Portal de Pagos · Lighthouse local (FCP, LCP, Speed Index, Performance)</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <dl class="meta">
+          <div><dt>Última medición</dt><dd id="meta-updated">—</dd></div>
+          <div><dt>Corridas</dt><dd id="meta-runs">0</dd></div>
+          <div><dt>Registros</dt><dd id="meta-records">0</dd></div>
+        </dl>
+        <div class="source">
+          <span class="source__dot" aria-hidden="true"></span>
+          <span id="source-label">Cargando…</span>
+          <button type="button" class="btn btn--ghost btn--sm" id="source-toggle" hidden>Ver demo</button>
+          <button type="button" class="btn btn--ghost btn--sm" id="print-button" title="Imprimir o guardar como PDF">Imprimir</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="banner" id="demo-banner" role="status" hidden>
+    <div class="container">Estás viendo <strong>datos de demostración</strong> sintéticos. No corresponden a mediciones reales.</div>
+  </div>
+
+  <main id="main" class="container">
+    <section id="loader" class="loader" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <p>Cargando mediciones…</p>
+    </section>
+
+    <section id="fallback" class="card fallback" hidden aria-labelledby="fallback-title">
+      <h2 id="fallback-title">Carga el archivo de métricas</h2>
+      <p id="fallback-reason" class="text-warn"></p>
+      <p>Para ver el informe con datos en vivo ejecuta <code>npm run report</code> y abre <code>http://localhost:4173</code>.
+        También puedes seleccionar <code>cypress/fixtures/lighthouse-metrics.json</code> manualmente:</p>
+      <label class="dropzone" id="fallback-drop" for="fallback-file">
+        <span class="dropzone__icon" aria-hidden="true">⇪</span>
+        <span>Arrastra el JSON aquí o <u>haz clic para seleccionarlo</u></span>
+        <input type="file" id="fallback-file" accept=".json,application/json">
+      </label>
+    </section>
+
+    <div id="app" hidden>
+      <p class="alert alert--warn" id="rejected-notice" hidden></p>
+
+      <nav class="tabs" role="tablist" aria-label="Secciones del informe">
+        <a href="#resumen" class="tab" role="tab" data-view="resumen" id="tab-resumen" aria-controls="view-resumen">Resumen</a>
+        <a href="#comparativa" class="tab" role="tab" data-view="comparativa" id="tab-comparativa" aria-controls="view-comparativa">Móvil vs. escritorio</a>
+        <a href="#historial" class="tab" role="tab" data-view="historial" id="tab-historial" aria-controls="view-historial">Historial</a>
+        <a href="#umbrales" class="tab" role="tab" data-view="umbrales" id="tab-umbrales" aria-controls="view-umbrales">Umbrales</a>
+      </nav>
+
+      <form class="filters" id="filters" aria-label="Filtros" onsubmit="return false">
+        <label class="field">
+          <span class="field__label">Página</span>
+          <select id="filter-page"></select>
+        </label>
+        <label class="field">
+          <span class="field__label">Dispositivo</span>
+          <select id="filter-device"></select>
+        </label>
+        <label class="field">
+          <span class="field__label">Métrica (gráficas)</span>
+          <select id="filter-metric"></select>
+        </label>
+        <label class="field">
+          <span class="field__label">Desde</span>
+          <input type="date" id="filter-from">
+        </label>
+        <label class="field">
+          <span class="field__label">Hasta</span>
+          <input type="date" id="filter-to">
+        </label>
+        <button type="button" class="btn btn--ghost" id="filter-reset">Limpiar filtros</button>
+      </form>
+
+      <section id="view-resumen" class="view" role="tabpanel" aria-labelledby="tab-resumen">
+        <h2 class="view__title">Resumen de la última medición</h2>
+        <div id="summary-content"></div>
+      </section>
+
+      <section id="view-comparativa" class="view" role="tabpanel" aria-labelledby="tab-comparativa" hidden>
+        <h2 class="view__title">Comparativa móvil vs. escritorio</h2>
+        <div id="comparison-content"></div>
+      </section>
+
+      <section id="view-historial" class="view" role="tabpanel" aria-labelledby="tab-historial" hidden>
+        <h2 class="view__title">Historial de mediciones</h2>
+        <div id="history-content"></div>
+      </section>
+
+      <section id="view-umbrales" class="view" role="tabpanel" aria-labelledby="tab-umbrales" hidden>
+        <h2 class="view__title">Umbrales y leyenda</h2>
+        <div id="thresholds-content"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      Métricas obtenidas con Lighthouse en Chrome headless (emulación móvil 412×823 y escritorio 1350×940).
+      Al ser mediciones locales, los valores pueden variar entre equipos y redes. Fechas en hora de Bogotá.
+    </div>
+  </footer>
+
+  <!-- Chart.js servido localmente por report/serve.js; CDN como respaldo. -->
+  <script src="vendor/chart.umd.min.js"></script>
+  <script>
+    window.Chart || document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js@4.6.1/dist/chart.umd.min.js"><\/script>');
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
